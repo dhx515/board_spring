@@ -5,9 +5,11 @@ import com.example.board.entity.BoardEntity;
 import com.example.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // DTO -> Entity (Entity Class)
 // Entity -> DTO (DTO Class)
@@ -29,5 +31,20 @@ public class BoardService {
             boardDTOList.add(BoardDTO.toBoardDTO(boardEntity));
         }
         return boardDTOList;
+    }
+
+    @Transactional
+    public void updateHits(Long id) {
+        boardRepository.updateHits(id);
+    }
+
+    public BoardDTO findById(Long id) {
+        Optional<BoardEntity> optionalBoardEntity = boardRepository.findById(id);
+        if (optionalBoardEntity.isPresent()) {
+            BoardEntity boardEntity = optionalBoardEntity.get();
+            return BoardDTO.toBoardDTO(boardEntity);
+        } else {
+            return null;
+        }
     }
 }
